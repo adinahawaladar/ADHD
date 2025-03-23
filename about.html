@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusCheck - About ADHD Detection</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #6A5ACD; /* Slate blue */
+            --secondary-color: #4682B4; /* Steel blue */
+            --accent-color: #FF7F50; /* Coral */
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover:after {
+            width: 100%;
+        }
+        
+        nav a.active:after {
+            width: 100%;
+        }
+
+        /* Page Title Section */
+        .page-title {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('abou.jpg') center/cover no-repeat;
+            padding: 60px 0;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-title h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .page-title p {
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* About ADHD Section */
+        .about-section {
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        .about-content {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+        }
+
+        .about-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .about-image img:hover {
+            transform: scale(1.03);
+        }
+
+        .section-title {
+            font-size: 36px;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        /* FocusCheck Project Section */
+        .project-section {
+            padding: 80px 0;
+            background-color: #f0f4f8;
+            position: relative;
+        }
+
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .shape {
+            position: absolute;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            opacity: 0.1;
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            left: 10%;
+            top: 20%;
+            animation-duration: 25s;
+        }
+        
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            left: 80%;
+            top: 60%;
+            animation-duration: 30s;
+            animation-delay: 2s;
+        }
+        
+        .shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            left: 30%;
+            top: 70%;
+            animation-duration: 20s;
+            animation-delay: 4s;
+        }
+        
+        .shape:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            left: 70%;
+            top: 30%;
+            animation-duration: 18s;
+            animation-delay: 6s;
+        }
+        
+        .shape:nth-child(5) {
+            width: 50px;
+            height: 50px;
+            left: 50%;
+            top: 50%;
+            animation-duration: 22s;
+            animation-delay: 5s;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.1;
+            }
+            50% {
+                transform: translateY(-100px) rotate(180deg);
+                opacity: 0.05;
+            }
+            100% {
+                transform: translateY(0) rotate(360deg);
+                opacity: 0.1;
+            }
+        }
+
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            flex: 1;
+            min-width: 300px;
+            max-width: 350px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-icon {
+            font-size: 48px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .faq-container {
+            position: relative;
+            z-index: 5;
+        }
+
+        .faq-blur-container {
+            position: relative;
+        }
+
+        .faq-blur-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('jkk') center/cover no-repeat;
+            filter: blur(10px);
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 5;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item:hover {
+            transform: translateX(10px);
+        }
+
+        .faq-question {
+            padding: 20px;
+            font-weight: 600;
+            color: var(--dark-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .faq-question i {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 20px 20px;
+            max-height: 500px;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Animation classes */
+        .animate-fade-in-up {
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        .delay-1 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.6s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.9s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                FocusCheck
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="foucscheck.html" >Home</a></li>
+                    <li><a href="Test.html">Test</a></li>
+                  
+                    <li><a href="http://127.0.0.1:7860/">Treatment</a></li>
+                        <a href="about.html" class="active">About </i></a>
+                        
+                        
+                    </li>
+                    <li><a href="contact.html">Contact</a></li>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Title -->
+    <section class="page-title">
+        <div class="container">
+            <h1>Understanding ADHD</h1>
+            <p>Learn about Attention-Deficit/Hyperactivity Disorder and how FocusCheck can help with early detection</p>
+        </div>
+    </section>
+
+    <!-- About ADHD Section -->
+    <section class="about-section">
+        <div class="container about-container">
+            <div class="about-content animate-fade-in-up">
+                <h2 class="section-title">What is ADHD?</h2>
+                <p>Attention-deficit/hyperactivity disorder (ADHD) is a neurodevelopmental disorder affecting both children and adults. It is characterized by persistent patterns of inattention, hyperactivity, and impulsivity that interfere with functioning and development.</p>
+                <p>ADHD typically begins in childhood and can continue through adolescence and into adulthood. Children with ADHD may struggle with paying attention, controlling impulsive behaviors, or be overly active.</p>
+                <p>Early detection and intervention can significantly improve outcomes for children with ADHD, helping them to develop coping strategies and receive appropriate support both at home and in educational settings.</p>
+            </div>
+            <div class="about-image animate-fade-in-up delay-1">
+                <img src="zzz.jpg" alt="Child with ADHD">
+            </div>
+        </div>
+    </section>
+
+    <!-- FocusCheck Project Section -->
+    <section class="project-section">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+        <div class="container">
+            <h2 class="section-title">FocusCheck: AI-Powered ADHD Detection</h2>
+            <p class="animate-fade-in-up">FocusCheck is an innovative AI-based tool designed to assist in the early detection of ADHD symptoms in children. Our project combines cutting-edge artificial intelligence with established psychological assessment methods to provide a comprehensive screening tool for parents, educators, and healthcare providers.</p>
+            
+            <div class="cards-container">
+                <div class="card animate-fade-in-up delay-1">
+                    <div class="card-icon">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <h3>How ADHD Detection Works</h3>
+                    <p>FocusCheck uses a multi-modal approach to assess potential ADHD symptoms:</p>
+                    <ul>
+                        <li>Behavior analysis through video recordings</li>
+                        <li>Attention tracking during interactive tasks</li>
+                        <li>Machine learning algorithms that compare results to established patterns</li>
+                        <li>Parent and teacher questionnaires for comprehensive evaluation</li>
+                    </ul>
+                    <p>Our AI system analyzes these inputs to provide a preliminary assessment that can help guide further professional evaluation.</p>
+                </div>
+                
+                <div class="card animate-fade-in-up delay-2">
+                    <div class="card-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3>What FocusCheck Provides</h3>
+                    <p>Our platform offers several key benefits:</p>
+                    <ul>
+                        <li>Early detection of potential ADHD indicators</li>
+                        <li>User-friendly interface accessible to parents and educators</li>
+                        <li>Comprehensive reports that can be shared with healthcare professionals</li>
+                        <li>Progress tracking over time to monitor developmental changes</li>
+                        <li>Resources and strategies tailored to identified challenges</li>
+                    </ul>
+                </div>
+                
+                <div class="card animate-fade-in-up delay-3">
+                    <div class="card-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3>Objectives & Outcomes</h3>
+                    <p>FocusCheck aims to:</p>
+                    <ul>
+                        <li>Reduce the age of ADHD diagnosis to enable earlier intervention</li>
+                        <li>Provide accessible screening tools to underserved communities</li>
+                        <li>Support parents with actionable insights about their child's development</li>
+                        <li>Assist healthcare professionals with data-driven assessments</li>
+                        <li>Improve educational outcomes through targeted support strategies</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container faq-container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="animate-fade-in-up">Common questions parents have about ADHD and our assessment process</p>
+            
+            <div class="faq-blur-container animate-fade-in-up delay-1">
+                <div class="faq-blur-bg"></div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How early can ADHD be detected in children?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>While ADHD is most commonly diagnosed in school-age children (typically between 6-12 years old), symptoms can often be observed in children as young as 3-4 years old. Early signs may include excessive motor activity, difficulty following instructions, and problems with self-regulation. FocusCheck is designed to help identify potential signs from preschool age, although a clinical diagnosis typically comes later.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Is FocusCheck a replacement for professional diagnosis?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>No, FocusCheck is not a diagnostic tool and cannot replace professional clinical assessment. Our system is designed as a screening tool to help identify children who may benefit from further evaluation by qualified healthcare professionals such as pediatricians, child psychologists, or psychiatrists. Think of FocusCheck as a first step that can provide valuable information to discuss with medical professionals.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What are the common symptoms of ADHD in children?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>ADHD symptoms generally fall into three categories:</p>
+                        <ul>
+                            <li><strong>Inattention:</strong> Difficulty sustaining attention, easily distracted, forgetful, loses things, makes careless mistakes</li>
+                            <li><strong>Hyperactivity:</strong> Fidgeting, running or climbing excessively, difficulty staying seated, talks excessively</li>
+                            <li><strong>Impulsivity:</strong> Interrupting others, difficulty waiting turn, blurting out answers</li>
+                        </ul>
+                        <p>It's important to note that children may predominantly show symptoms from one category or a combination of symptoms from different categories.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How does FocusCheck protect my child's privacy?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We take privacy very seriously, especially when it comes to children's data. FocusCheck employs end-to-end encryption for all video assessments, and all data is stored in compliance with HIPAA and GDPR regulations. Video data is processed locally when possible and automatically deleted after analysis unless explicitly saved by parents. Parents maintain complete control over all data and can request deletion at any time. We never share individual assessment data with third parties without explicit consent.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        My child is very active but can focus on things they enjoy. Could they still have ADHD?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, this is actually a common characteristic of many children with ADHD. The ability to hyperfocus on highly interesting activities while struggling to maintain attention on less stimulating tasks is a pattern often seen in ADHD. This contradiction can sometimes lead to misunderstandings where parents or teachers think a child is "choosing" not to pay attention. FocusCheck's assessment includes tasks with varying levels of engagement to help identify these patterns.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // FAQ Accordion
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                
+                question.addEventListener('click', () => {
+                    // Close all other items
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item && otherItem.classList.contains('active')) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+                    
+                    // Toggle current item
+                    item.classList.toggle('active');
+                });
+            });
+            
+            // Animation on scroll
+            const animatedElements = document.querySelectorAll('.animate-fade-in-up');
+            
+            function checkIfInView() {
+                animatedElements.forEach(element => {
+                    const rect = element.getBoundingClientRect();
+                    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+                    
+                    if (rect.top <= windowHeight * 0.8) {
+                        element.style.visibility = 'visible';
+                    } else {
+                        element.style.visibility = 'hidden';
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', checkIfInView);
+            window.addEventListener('resize', checkIfInView);
+            window.addEventListener('load', checkIfInView);
+            
+            // Initial check
+            checkIfInView();
+        });
+    </script>
+</body>
+</html>

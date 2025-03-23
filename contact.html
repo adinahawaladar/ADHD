@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - FocusCheck</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #6A5ACD; /* Slate blue */
+            --secondary-color: #4682B4; /* Steel blue */
+            --accent-color: #FF7F50; /* Coral */
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover:after {
+            width: 100%;
+        }
+        
+        nav a.active:after {
+            width: 100%;
+        }
+
+        /* Contact Hero Section */
+        .contact-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('contt.avif') center/cover no-repeat;
+            height: 30vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .contact-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+        
+        .contact-hero h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            animation: fadeInDown 1s ease;
+        }
+        
+        .contact-hero p {
+            font-size: 18px;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+        
+        /* Contact Form Section */
+        .contact-section {
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .contact-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .contact-info h2 {
+            font-size: 32px;
+            color: var(--dark-color);
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .contact-info h2::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            left: 0;
+            bottom: 0;
+        }
+        
+        .contact-info p {
+            margin-bottom: 25px;
+            color: #555;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+        
+        .contact-methods {
+            margin-top: 30px;
+        }
+        
+        .contact-method {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            animation: slideInLeft 0.8s ease forwards;
+            opacity: 0;
+        }
+        
+        .contact-method:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+        
+        .contact-method:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+        
+        .contact-method:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-right: 15px;
+            flex-shrink: 0;
+            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.3);
+        }
+        
+        .contact-method-content h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+        
+        .contact-method-content p {
+            margin: 0;
+            color: #555;
+        }
+        
+        .contact-form-container {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            animation: fadeIn 1s ease 0.5s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .contact-form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+            color: #333;
+            background-color: #fafafa;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(106, 90, 205, 0.2);
+            background-color: #fff;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+        
+        .form-submit {
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .form-submit:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(106, 90, 205, 0.4);
+        }
+        
+        /* Animated Shapes */
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .shape {
+            position: absolute;
+            opacity: 0.2;
+            animation: floatAnimate 15s infinite linear;
+        }
+        
+        .shape-1 {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .shape-2 {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            bottom: 10%;
+            right: 20%;
+            animation-delay: 2s;
+        }
+        
+        .shape-3 {
+            width: 70px;
+            height: 70px;
+            background-color: var(--accent-color);
+            top: 60%;
+            left: 30%;
+            animation-delay: 4s;
+            border-radius: 10px;
+            transform: rotate(45deg);
+        }
+        
+        .shape-4 {
+            width: 120px;
+            height: 120px;
+            background-color: var(--info-color);
+            top: 40%;
+            right: 10%;
+            animation-delay: 6s;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+        
+        @keyframes floatAnimate {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.2;
+            }
+            25% {
+                transform: translate(50px, -50px) rotate(90deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(100px, 0) rotate(180deg);
+                opacity: 0.2;
+            }
+            75% {
+                transform: translate(50px, 50px) rotate(270deg);
+                opacity: 0.3;
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+                opacity: 0.2;
+            }
+        }
+        
+        /* Form animations */
+        .input-animation {
+            position: relative;
+        }
+        
+        .input-animation::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            transition: all 0.3s ease;
+        }
+        
+        .input-animation.active::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        /* Success Message */
+        .success-message {
+            display: none;
+            background-color: rgba(40, 167, 69, 0.1);
+            border: 2px solid var(--success-color);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .success-message i {
+            font-size: 48px;
+            color: var(--success-color);
+            margin-bottom: 15px;
+        }
+        
+        .success-message h3 {
+            font-size: 24px;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+        
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark-color);
+            color: #f8f9fa;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background-color: var(--accent-color);
+            bottom: 0;
+            left: 0;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-column a:hover {
+            color: var(--accent-color);
+            padding-left: 5px;
+        }
+        
+        .footer-column p {
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 14px;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .contact-container {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+            
+            .contact-hero h1 {
+                font-size: 36px;
+            }
+            
+            .contact-hero p {
+                font-size: 16px;
+            }
+            
+            .contact-form-container {
+                padding: 30px 20px;
+            }
+        }
+        
+        /* Floating animation for form */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>FocusCheck</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="foucscheck.html">Home</a></li>
+                    <li><a href="Test.html">Test</a></li>
+                    <li><a href="http://127.0.0.1:7860/">Treatment</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html" class="active">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Contact Hero Section -->
+    <section class="contact-hero">
+        <div class="contact-hero-content">
+            <h1>Get in Touch</h1>
+            <p>We're here to answer your questions and provide support on your journey</p>
+        </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section class="contact-section">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+        <div class="container">
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h2>Contact Information</h2>
+                    <p>Have questions about FocusCheck or ADHD detection? Our team is here to help you navigate the journey of understanding and supporting children with attention challenges.</p>
+                    
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-method-content">
+                                <h4>Our Location</h4>
+                                <p>123 Innovation Drive, Suite 400</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div class="contact-method-content">
+                                <h4>Phone Number</h4>
+                                <p>(800) 555-ADHD</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-method-content">
+                                <h4>Email Address</h4>
+                                <p>info@focuscheck.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form-container float-animation">
+                    <form id="contactForm">
+                        <div class="form-group input-animation">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                        </div>
+                        
+                        <div class="form-group input-animation">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                        </div>
+                        
+                        <div class="form-group input-animation">
+                            <label for="subject">Subject</label>
+                            <select id="subject" name="subject" required>
+                                <option value="" disabled selected>Select a subject</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="assessment">Assessment Questions</option>
+                                <option value="support">Technical Support</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="partnership">Partnership Opportunities</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group input-animation">
+                            <label for="message">Your Message</label>
+                            <textarea id="message" name="message" placeholder="Please enter your questions or comments here..." required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="form-submit">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                    
+                    <div class="success-message" id="successMessage">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>Message Sent Successfully!</h3>
+                        <p>Thank you for reaching out. We'll get back to you shortly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>FocusCheck</h3>
+                    <p>Empowering families through early detection and understanding of ADHD in children.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="foucscheck.html">Home</a></li>
+                        <li><a href="Test.html">Assessment</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 FocusCheck. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Form input animations
+        const formInputs = document.querySelectorAll('.input-animation input, .input-animation textarea, .input-animation select');
+        
+        formInputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('active');
+            });
+            
+            input.addEventListener('blur', function() {
+                if (this.value === '') {
+                    this.parentElement.classList.remove('active');
+                }
+            });
+        });
+        
+        // Form submission
+        const contactForm = document.getElementById('contactForm');
+        const successMessage = document.getElementById('successMessage');
+        
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simulate form submission with loading effect
+            const submitButton = this.querySelector('.form-submit');
+            const originalText = submitButton.innerHTML;
+            
+            submitButton.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Sending...';
+            submitButton.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                contactForm.style.display = 'none';
+                successMessage.style.display = 'block';
+                
+                // Reset form for future use
+                contactForm.reset();
+                
+                // Reset button
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+                
+                // Hide success message after 5 seconds and show form again
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                    contactForm.style.display = 'block';
+                }, 5000);
+            }, 1500);
+        });
+        
+        // Create animated particles for background
+        function createParticles() {
+            const section = document.querySelector('.contact-section');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.animationDuration = Math.random() * 10 + 10 + 's';
+                section.appendChild(particle);
+            }
+        }
+        
+        // Add active class to current navigation item
+        const currentLocation = location.pathname;
+        const navItems = document.querySelectorAll('nav a');
+        navItems.forEach(item => {
+            if(item.getAttribute('href') === currentLocation.substring(currentLocation.lastIndexOf('/') + 1)) {
+                item.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

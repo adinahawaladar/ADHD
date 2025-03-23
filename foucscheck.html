@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusCheck - AI ADHD Detection for Children</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #6A5ACD; /* Slate blue */
+            --secondary-color: #4682B4; /* Steel blue */
+            --accent-color: #FF7F50; /* Coral */
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover:after {
+            width: 100%;
+        }
+        
+        nav a.active:after {
+            width: 100%;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('hero.avif') center/cover no-repeat;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Animated background elements */
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .shape {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            left: 10%;
+            top: 20%;
+            animation-duration: 25s;
+        }
+        
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            left: 80%;
+            top: 60%;
+            animation-duration: 30s;
+            animation-delay: 2s;
+        }
+        
+        .shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            left: 30%;
+            top: 70%;
+            animation-duration: 20s;
+            animation-delay: 4s;
+        }
+        
+        .shape:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            left: 70%;
+            top: 30%;
+            animation-duration: 18s;
+            animation-delay: 6s;
+        }
+        
+        .shape:nth-child(5) {
+            width: 50px;
+            height: 50px;
+            left: 50%;
+            top: 50%;
+            animation-duration: 22s;
+            animation-delay: 5s;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(-100px) rotate(180deg);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(0) rotate(360deg);
+                opacity: 0.8;
+            }
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease-in-out;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            animation: fadeInUp 1.5s ease-in-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #ff6347;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+            margin-left: 15px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: white;
+            color: var(--dark-color);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-group {
+            margin-top: 30px;
+            animation: fadeInUp 2s ease-in-out;
+        }
+        
+        /* How It Works Section */
+        .how-it-works {
+            padding: 80px 0;
+            background-color: white;
+            text-align: center;
+        }
+        
+        .steps-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .step-card {
+            flex: 1;
+            min-width: 250px;
+            max-width: 350px;
+            background-color: var(--light-color);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 1;
+        }
+        
+        .step-icon {
+            font-size: 48px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .step-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background-color: #f8f9fa;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 36px;
+            color: var(--dark-color);
+            margin-bottom: 20px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-color);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title p {
+            font-size: 18px;
+            color: #555;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .feature-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background-color: rgba(106, 90, 205, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            color: var(--primary-color);
+            font-size: 28px;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+        
+        /* Info Section */
+        .info-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+        
+        .info-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 40px;
+        }
+        
+        .info-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .info-text h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        
+        .info-text p {
+            margin-bottom: 20px;
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .info-stats {
+            flex: 1;
+            min-width: 300px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .stat-card:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        /* Signs & Symptoms */
+        .symptoms-section {
+            padding: 80px 0;
+            background-color: white;
+        }
+        
+        .symptoms-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .symptoms-list {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .symptom-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+        
+        .symptom-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .symptom-icon {
+            min-width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .symptom-content h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+        
+        .symptoms-image {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .symptoms-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* Call to Action */
+        .cta-section {
+            padding: 100px 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('h22.jpg') center/cover no-repeat;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: particleAnimation 8s infinite linear;
+        }
+        
+        @keyframes particleAnimation {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-500px) translateX(100px);
+                opacity: 0;
+            }
+        }
+        
+        /* Generate 20 particles at different positions */
+        .particle:nth-child(1) { left: 10%; top: 100%; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; top: 100%; animation-delay: 0.4s; }
+        .particle:nth-child(3) { left: 30%; top: 100%; animation-delay: 0.8s; }
+        .particle:nth-child(4) { left: 40%; top: 100%; animation-delay: 1.2s; }
+        .particle:nth-child(5) { left: 50%; top: 100%; animation-delay: 1.6s; }
+        .particle:nth-child(6) { left: 60%; top: 100%; animation-delay: 2.0s; }
+        .particle:nth-child(7) { left: 70%; top: 100%; animation-delay: 2.4s; }
+        .particle:nth-child(8) { left: 80%; top: 100%; animation-delay: 2.8s; }
+        .particle:nth-child(9) { left: 90%; top: 100%; animation-delay: 3.2s; }
+        .particle:nth-child(10) { left: 5%; top: 100%; animation-delay: 3.6s; }
+        .particle:nth-child(11) { left: 15%; top: 100%; animation-delay: 4.0s; }
+        .particle:nth-child(12) { left: 25%; top: 100%; animation-delay: 4.4s; }
+        .particle:nth-child(13) { left: 35%; top: 100%; animation-delay: 4.8s; }
+        .particle:nth-child(14) { left: 45%; top: 100%; animation-delay: 5.2s; }
+        .particle:nth-child(15) { left: 55%; top: 100%; animation-delay: 5.6s; }
+        .particle:nth-child(16) { left: 65%; top: 100%; animation-delay: 6.0s; }
+        .particle:nth-child(17) { left: 75%; top: 100%; animation-delay: 6.4s; }
+        .particle:nth-child(18) { left: 85%; top: 100%; animation-delay: 6.8s; }
+        .particle:nth-child(19) { left: 95%; top: 100%; animation-delay: 7.2s; }
+        .particle:nth-child(20) { left: 15%; top: 100%; animation-delay: 7.6s; }
+        
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .cta-section h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        
+        .cta-section p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark-color);
+            color: #f8f9fa;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background-color: var(--accent-color);
+            bottom: 0;
+            left: 0;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-column a:hover {
+            color: var(--accent-color);
+            padding-left: 5px;
+        }
+        
+        .footer-column p {
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 14px;
+        }
+        
+        /* Pulse Animation */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .info-container, .symptoms-container {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .btn-group {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn-secondary {
+                margin-left: 0;
+            }
+        }
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            padding: 10px 0;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .dropdown-content a {
+            color: var(--dark-color) !important;
+            padding: 12px 20px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s ease;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: var(--accent-color);
+            color: white !important;
+        }
+        
+        .dropdown-content a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 80px 0;
+            background-color: #f8f9fa;
+        }
+        
+        .testimonials-slider {
+            margin-top: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .testimonial-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin: 10px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .testimonial-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            border: 4px solid var(--primary-color);
+        }
+        
+        .testimonial-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .testimonial-rating {
+            color: var(--warning-color);
+            margin-bottom: 15px;
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        
+        .testimonial-author {
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+        
+        .testimonial-role {
+            font-size: 14px;
+            color: #777;
+        }
+        
+       
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>FocusCheck</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="foucscheck.html" class="active">Home</a></li>
+                    <li><a href="Test.html">Test</a></li>
+                  
+                    <li><a href="http://127.0.0.1:7860/" target="_blank">Treatment</a></li>                   
+                        <a href="about.html" >About </i></a>
+                        
+                        
+                    </li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section--> 
+    <section class="hero">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>AI-Powered ADHD Detection for Children</h1>
+                <p>Early identification leads to better outcomes. Our advanced AI technology helps identify ADHD signs in children with greater accuracy.</p>
+                <div class="btn-group">
+                    <a href="Test.html" class="btn btn-primary">Start Assessment</a>
+                    <a href="about.html" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>How FocusCheck Works</h2>
+                
+
+<p>Our platform uses AI to analyze behavioral patterns and provide insights about potential ADHD indicators</p>
+            </div>
+            
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h3 class="step-title">Complete Assessment</h3>
+                    <p>Answer our evidence-based questionnaire about your child's behavior and attention patterns.</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="step-title">AI Analysis</h3>
+                    <p>Our advanced AI algorithm analyzes the responses and identifies potential ADHD indicators.</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3 class="step-title">Receive Insights</h3>
+                    <p>Get a detailed report with personalized insights and recommendations for next steps.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Why Choose FocusCheck</h2>
+                <p>Our platform offers unique advantages for parents, educators, and healthcare providers</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Advanced AI Technology</h3>
+                    <p>Powered by machine learning algorithms trained on extensive clinical data for accurate assessments.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3>Clinically Validated</h3>
+                    <p>Developed in collaboration with child psychiatrists and ADHD specialists.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>Privacy Focused</h3>
+                    <p>Your data is encrypted and securely stored, with strict privacy controls in place.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>Fast Results</h3>
+                    <p>Receive comprehensive assessment results within minutes, not weeks.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3>Educational Resources</h3>
+                    <p>Access our library of resources to better understand ADHD and support strategies.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h3>Ongoing Support</h3>
+                    <p>Connect with professionals and community resources for continued guidance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="info-section">
+        <div class="container">
+            <div class="info-container">
+                <div class="info-text">
+                    <h2>ADHD Affects Millions of Children</h2>
+                    <p>Attention-Deficit/Hyperactivity Disorder (ADHD) is one of the most common neurodevelopmental disorders in childhood, affecting approximately 5-10% of children worldwide.</p>
+                    <p>Early detection and intervention can significantly improve outcomes and quality of life for children with ADHD. Our mission is to make assessment more accessible and accurate.</p>
+                   
+                </div>
+                
+                <div class="info-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">9.4%</div>
+                        <div class="stat-label">Children diagnosed with ADHD in the US</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-number">60%</div>
+                        <div class="stat-label">Continue to experience symptoms into adulthood</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-number">3:1</div>
+                        <div class="stat-label">Boys to girls diagnosis ratio</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Assessment accuracy with FocusCheck</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Signs & Symptoms -->
+    <section class="symptoms-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Common Signs & Symptoms</h2>
+                <p>ADHD symptoms typically fall into three categories: inattention, hyperactivity, and impulsivity</p>
+            </div>
+            
+            <div class="symptoms-container">
+                <div class="symptoms-list">
+                    <div class="symptom-item">
+                        <div class="symptom-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="symptom-content">
+                            <h4>Difficulty Sustaining Attention</h4>
+                            <p>Trouble focusing on tasks, easily distracted, difficulty completing schoolwork.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="symptom-item">
+                        <div class="symptom-icon">
+                            <i class="fas fa-running"></i>
+                        </div>
+                        <div class="symptom-content">
+                            <h4>Hyperactivity</h4>
+                            <p>Excessive movement, fidgeting, inability to stay seated, always "on the go".</p>
+                        </div>
+                    </div>
+                    
+                    <div class="symptom-item">
+                        <div class="symptom-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="symptom-content">
+                            <h4>Impulsivity</h4>
+                            <p>Acting without thinking, interrupting others, difficulty waiting their turn.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="symptom-item">
+                        <div class="symptom-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="symptom-content">
+                            <h4>Poor Organization</h4>
+                            <p>Messy spaces, losing things, poor time management, forgetfulness.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="symptoms-image">
+                    <img src="hyper.jpg" alt="Child with ADHD symptoms illustration">
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+    <!-- Call to Action -->
+    <section class="cta-section">
+        <div class="cta-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="container">
+            <div class="cta-content">
+                <h2>Take the First Step Today</h2>
+                <p>Early identification leads to better outcomes. Start the assessment and gain valuable insights about your child's behavior and attention patterns.</p>
+                <a href="Test.html" class="btn btn-primary pulse">Start Free Assessment</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>FocusCheck</h3>
+                    <p>Empowering families through early detection and understanding of ADHD in children.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="assessment.html">Assessment</a></li>
+                        <li><a href="resources.html">Resources</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="research.html">Research</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="support.html">Support</a></li>
+                        <li><a href="partners.html">For Professionals</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Innovation Drive, Suite 400</li>
+                        <li><i class="fas fa-phone"></i> (800) 555-ADHD</li>
+                        <li><i class="fas fa-envelope"></i> info@focuscheck.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 FocusCheck. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating UI -->
+    <div class="floating-ui bounce">
+        <i class="fas fa-comments"></i>
+    </div>
+
+    <script>
+        // Basic functionality for the floating chat button
+        document.querySelector('.floating-ui').addEventListener('click', function() {
+            alert('Chat support feature coming soon! Please contact us at support@focuscheck.com for assistance.');
+        });
+        
+        // Add active class to current navigation item
+        const currentLocation = location.pathname;
+        const navItems = document.querySelectorAll('nav a');
+        navItems.forEach(item => {
+            if(item.getAttribute('href') === currentLocation.substring(currentLocation.lastIndexOf('/') + 1)) {
+                item.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
